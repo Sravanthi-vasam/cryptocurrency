@@ -1,0 +1,212 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Sign Up</title>
+    <style>
+        /* Global Styling */
+        body {
+            font-family: 'Roboto', sans-serif;
+            margin: 0;
+            padding: 0;
+            background: linear-gradient(135deg, #2980b9, #6dd5fa, #b4d1f3);
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            height: 100vh;
+            color: #444;
+        }
+
+        .wrapper, #guestForm {
+            width: 100%;
+            max-width: 420px;
+            background: #fff;
+            border-radius: 12px;
+            padding: 30px;
+            box-shadow: 0 8px 25px rgba(0, 0, 0, 0.15);
+            animation: fadeIn 0.5s ease-in-out;
+        }
+        .sub{
+            color: grey;
+            text-align: center;
+            font-weight: 500;
+            font-size: 15px;
+            letter-spacing: 0.5px;
+            word-spacing: 2px   ;
+        }
+
+        @keyframes fadeIn {
+            from {
+                opacity: 0;
+                transform: translateY(-20px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        .title {
+            font-size: 1.8rem;
+            font-weight: 700;
+            margin-bottom: 10px;
+            text-align: center;
+            color: #2c3e50;
+        }
+
+        .form-group {
+            display: flex;
+            flex-direction: column;
+            margin-bottom: 20px;
+        }
+
+        input {
+            border: 1px solid #ddd;
+            border-radius: 8px;
+            padding: 12px;
+            font-size: 1rem;
+            margin-top: 8px;
+            outline: none;
+            transition: 0.3s;
+        }
+
+        input:focus {
+            border-color: #3498db;
+            box-shadow: 0 0 10px rgba(52, 152, 219, 0.3);
+        }
+
+        button {
+            width: 100%;
+            padding: 14px;
+            font-size: 1rem;
+            font-weight: bold;
+            border: none;
+            border-radius: 8px;
+            color: white;
+            background: linear-gradient(135deg, #3498db, #2980b9);
+            cursor: pointer;
+            transition: all 0.3s ease;
+        }
+
+        button:hover {
+            background: linear-gradient(135deg, #2980b9, #3498db);
+            transform: translateY(-2px);
+            box-shadow: 0 4px 15px rgba(52, 152, 219, 0.3);
+        }
+
+        a {
+            text-align: center;
+            display: block;
+            margin-top: 10px;
+            font-size: 0.9rem;
+            color: #3498db;
+            text-decoration: none;
+            transition: color 0.3s;
+        }
+
+        a:hover {
+            color: #2980b9;
+        }
+
+        #guestForm {
+            display: none;
+        }
+    </style>
+</head>
+<body>
+    <div class="wrapper" id="signupPage">
+        <h1 class="title">Create an Account</h1>
+        <p class="sub">lets start our journey with Cryptocurrency</p>
+        <div class="form-group">
+            <label for="signupEmail">Email Address</label>
+            <input type="email" id="signupEmail" placeholder="Enter your email" required />
+        </div>
+        <div class="form-group">
+            <label for="signupPassword">Password</label>
+            <input type="password" id="signupPassword" placeholder="Create a password" required />
+        </div>
+        <button id="signupBtn">Sign Up</button>
+        <a href="login.html">Already have an account? Log In</a>
+        <button id="guestBtn" style="margin-top: 20px;">Continue as Guest</button>
+    </div>
+
+    <div id="guestForm">
+        <h2>Guest Access</h2>
+        <p>Please enter your email to continue:</p>
+        <div class="form-group">
+            <input type="email" id="guestEmail" placeholder="Enter your email" required />
+        </div>
+        <button id="guestSubmitBtn">Proceed</button>
+        <button id="backToSignupBtn" style="margin-top: 10px;">Back to Sign Up</button>
+    </div>
+
+    <script type="module">
+        import { initializeApp } from "https://www.gstatic.com/firebasejs/11.0.1/firebase-app.js";
+        import { getAuth, createUserWithEmailAndPassword, signInWithEmailAndPassword } from "https://www.gstatic.com/firebasejs/11.0.1/firebase-auth.js";
+
+        const firebaseConfig = {
+            apiKey: "AIzaSyAQf1zbCbTlbcP7hgdfn4lvE3XyeKMHzeo",
+            authDomain: "login-c5aad.firebaseapp.com",
+            projectId: "login-c5aad",
+            storageBucket: "login-c5aad.firebasestorage.app",
+            messagingSenderId: "281543678524",
+            appId: "1:281543678524:web:22ddcff758b33d7f35c139"
+        };
+
+        const app = initializeApp(firebaseConfig);
+        const auth = getAuth(app);
+        
+        const signupPage = document.getElementById("signupPage");
+        const signupBtn = document.getElementById("signupBtn");
+
+        const guestForm = document.getElementById("guestForm");
+        const guestBtn = document.getElementById("guestBtn");
+        const guestSubmitBtn = document.getElementById("guestSubmitBtn");
+        const backToSignupBtn = document.getElementById("backToSignupBtn");
+
+        signupBtn.addEventListener("click",fun1);
+        function fun1(){
+            let email=document.getElementById("signupEmail").value;
+            let password=document.getElementById("signupPassword").value;
+            createUserWithEmailAndPassword(auth, email, password)
+                .then((userCredential) => {
+                    alert("Sign up successful!");
+                    window.open("login.html","_self")
+                    // Redirect or perform further actions
+                })
+                .catch((error) => {
+                    const errorMessage = error.message;
+                    alert(`Signup failed: ${errorMessage}`);
+                });
+        }
+        
+
+        // Show Guest Email Form
+        guestBtn.addEventListener("click", () => {
+            signupPage.style.display = "none"; // Hide the signup page
+            guestForm.style.display = "block"; // Show the guest email form
+        });
+
+        // Submit Guest Email and Redirect
+        guestSubmitBtn.addEventListener("click", () => {
+            const guestEmail = document.getElementById("guestEmail").value;
+
+            // Basic email validation
+            const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+            if (emailRegex.test(guestEmail)) {
+                alert(`Guest login successful! Email: ${guestEmail}`);
+                window.open("main.html", "_self"); // Redirect to main.html
+            } else {
+                alert("Please enter a valid email address.");
+            }
+        });
+
+        // Back to Sign-Up Page
+        backToSignupBtn.addEventListener("click", () => {
+            guestForm.style.display = "none"; // Hide the guest email form
+            signupPage.style.display = "block"; // Show the signup page
+        });
+    </script>
+</body>
+</html>
